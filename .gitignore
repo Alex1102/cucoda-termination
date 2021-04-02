@@ -1,4 +1,11 @@
-# Project exclude paths
-/cucoda-termination-acceptancetest/target/
-/cucoda-termination-rest/target/
-/cucoda-termination-rest-api/target/
+target/
+.idea/
+.settings/
+/.links/
+
+*.iml
+.classpath
+.project
+.sts4-cache
+
+.attach_pid*
