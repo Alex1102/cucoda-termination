@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>org.example</groupId>
+    <artifactId>cucoda-termination</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <modules>
+        <module>cucoda-termination-rest</module>
+        <module>cucoda-termination-acceptancetest</module>
+        <module>cucoda-termination-rest-api</module>
+    </modules>
+
+    <properties>
+<!--        <maven.compiler.source>11</maven.compiler.source>-->
+<!--        <maven.compiler.target>11</maven.compiler.target>-->
+
+        <!-- Environment -->
+        <maven.compiler.release>11</maven.compiler.release>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.javadoc.failOnError>false</maven.javadoc.failOnError>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <skipIntegrationTests>true</skipIntegrationTests>
+
+        <!-- Services -->
+
+        <!-- Library -->
+        <version.lombok>1.18.18</version.lombok>
+
+        <!-- JEE/MP -->
+        <version.jakarta.jakartaee-api>8.0.0</version.jakarta.jakartaee-api>
+        <version.microprofile-openapi-api>1.1</version.microprofile-openapi-api>
+        <version.slf4j-api>1.7.30</version.slf4j-api>
+
+        <!-- Test -->
+        <version.junit>5.7.1</version.junit>
+        <version.assertj-core>3.19.0</version.assertj-core>
+        <version.mockito>3.7.7</version.mockito>
+        <version.weld>2.0.2.Final</version.weld>
+        <version.logback>1.2.3</version.logback>
+        <version.resteasy>3.12.1.Final</version.resteasy>
+        <version.hibernate-validator>6.1.6.Final</version.hibernate-validator>
+        <version.weld>2.0.2.Final</version.weld>
+
+        <!-- Plugins -->
+        <version.plugin.buildhelper>3.2.0</version.plugin.buildhelper>
+        <version.plugin.compiler>3.8.1</version.plugin.compiler>
+        <version.plugin.war>3.3.1</version.plugin.war>
+        <version.plugin.enforcer>3.0.0-M3</version.plugin.enforcer>
+        <version.plugin.surefire>3.0.0-M5</version.plugin.surefire>
+        <version.plugin.failsafe>3.0.0-M5</version.plugin.failsafe>
+        <version.plugin.extractversions>2.1.0</version.plugin.extractversions>
+        <version.plugin.cyclondex>2.1.1</version.plugin.cyclondex>
+        <version.plugin.iabudiab.dependencytrack>1.1.0</version.plugin.iabudiab.dependencytrack>
+        <version.plugin.jacoco>0.8.6</version.plugin.jacoco>
+        <version.plugin.git-commit-id>4.0.3</version.plugin.git-commit-id>
+    </properties>
+
+</project>

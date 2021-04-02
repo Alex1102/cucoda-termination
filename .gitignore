@@ -1,0 +1,4 @@
+# Project exclude paths
+/cucoda-termination-acceptancetest/target/
+/cucoda-termination-rest/target/
+/cucoda-termination-rest-api/target/
