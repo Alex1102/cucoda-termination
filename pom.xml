@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.example</groupId>
+    <groupId>com.mycompany.cucoda</groupId>
     <artifactId>cucoda-termination</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
@@ -15,8 +15,9 @@
     </modules>
 
     <properties>
-<!--        <maven.compiler.source>11</maven.compiler.source>-->
-<!--        <maven.compiler.target>11</maven.compiler.target>-->
+        <app.name>cucoda-termination</app.name>
+        <app.name.final>${app.name}</app.name.final>
+        <context-root>${app.name.final}</context-root>
 
         <!-- Environment -->
         <maven.compiler.release>11</maven.compiler.release>
@@ -29,6 +30,7 @@
 
         <!-- Library -->
         <version.lombok>1.18.18</version.lombok>
+        <version.yasson>1.0.8</version.yasson>
 
         <!-- JEE/MP -->
         <version.jakarta.jakartaee-api>8.0.0</version.jakarta.jakartaee-api>
@@ -42,7 +44,9 @@
         <version.weld>2.0.2.Final</version.weld>
         <version.logback>1.2.3</version.logback>
         <version.resteasy>3.12.1.Final</version.resteasy>
+        <version.archunit>0.17.0</version.archunit>
         <version.hibernate-validator>6.1.6.Final</version.hibernate-validator>
+        <version.javax-el>3.0.0</version.javax-el>
         <version.weld>2.0.2.Final</version.weld>
 
         <!-- Plugins -->
@@ -59,4 +63,298 @@
         <version.plugin.git-commit-id>4.0.3</version.plugin.git-commit-id>
     </properties>
 
+    <scm>
+        <tag>HEAD</tag>
+        <connection>scm:git:https://github.com/Alex1102/cucoda-termination.git</connection>
+        <developerConnection>scm:git:https://github.com/Alex1102/-termination.git</developerConnection>
+    </scm>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${version.plugin.compiler}</version>
+                <configuration>
+                    <source>${maven.compiler.release}</source>
+                    <target>${maven.compiler.release}</target>
+                    <parameters>true</parameters>
+                    <forceJavacCompilerUse>true</forceJavacCompilerUse>
+
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-enforcer-plugin</artifactId>
+                <version>${version.plugin.enforcer}</version>
+                <executions>
+                    <execution>
+                        <id>enforce-maven</id>
+                        <goals>
+                            <goal>enforce</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <requireMavenVersion>
+                                    <version>3.6.3</version>
+                                </requireMavenVersion>
+                                <requireJavaVersion>
+                                    <version>[11,)</version>
+                                </requireJavaVersion>
+                            </rules>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!--            <plugin>-->
+            <!--                <groupId></groupId>-->
+            <!--                <artifactId>maven-extract-versions-plugin</artifactId>-->
+            <!--                <version>${version.plugin.extractversions}</version>-->
+            <!--                <executions>-->
+            <!--                    <execution>-->
+            <!--                        <id>extract-versions</id>-->
+            <!--                        <phase>validate</phase>-->
+            <!--                        <goals>-->
+            <!--                            <goal>extract-versions</goal>-->
+            <!--                        </goals>-->
+            <!--                    </execution>-->
+            <!--                </executions>-->
+            <!--            </plugin>-->
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <version>${version.plugin.buildhelper}</version>
+                <executions>
+                    <execution>
+                        <id>parse-version</id>
+                        <goals>
+                            <goal>parse-version</goal>
+                        </goals>
+                        <configuration>
+                            <propertyPrefix>app.version</propertyPrefix>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-source</id>
+                        <phase>generate-sources</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>target/generated/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${version.plugin.surefire}</version>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${version.plugin.failsafe}</version>
+                <configuration>
+                    <skipTests>${skipIntegrationTests}</skipTests>
+                    <includes>
+                        <include>*AT</include>
+                        <include>*IT</include>
+                    </includes>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>integration-test</goal>
+                            <goal>verify</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>${version.plugin.jacoco}</version>
+                <executions>
+                    <execution>
+                        <id>jacoco-prepare-agent</id>
+                        <goals>
+                            <goal>prepare-agent</goal>
+                        </goals>
+                    </execution>
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>test</phase>
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- dependency tracker -->
+            <plugin>
+                <groupId>org.cyclonedx</groupId>
+                <artifactId>cyclonedx-maven-plugin</artifactId>
+                <version>${version.plugin.cyclondex}</version>
+            </plugin>
+            <plugin>
+                <groupId>dev.iabudiab</groupId>
+                <artifactId>dependency-track-maven-plugin</artifactId>
+                <version>${version.plugin.iabudiab.dependencytrack}</version>
+                <configuration>
+                    <dependencyTrackUrl>https://sediment.server.lan</dependencyTrackUrl>
+                    <projectName>omdm_${project.artifactId}</projectName>
+                    <securityGate>
+                        <critical>1</critical>
+                        <high>0</high>
+                        <medium>0</medium>
+                        <low>1</low>
+                    </securityGate>
+                </configuration>
+            </plugin>
+        </plugins>
+
+        <!--        <resources>-->
+        <!--            &lt;!&ndash; Generation of VersionData.java &ndash;&gt;-->
+        <!--            <resource>-->
+        <!--                <directory>src/main/template</directory>-->
+        <!--                <includes>-->
+        <!--                    <include>**/*.java</include>-->
+        <!--                </includes>-->
+        <!--                <filtering>true</filtering>-->
+        <!--                <targetPath>../generated/main/java</targetPath>-->
+        <!--            </resource>-->
+        <!--            <resource>-->
+        <!--                <directory>src/main/resources</directory>-->
+        <!--                <filtering>true</filtering>-->
+        <!--            </resource>-->
+        <!--        </resources>-->
+    </build>
+
+    <dependencyManagement>
+        <dependencies>
+
+            <!-- JEE / MicroProfile -->
+            <dependency>
+                <groupId>jakarta.platform</groupId>
+                <artifactId>jakarta.jakartaee-api</artifactId>
+                <version>${version.jakarta.jakartaee-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse.microprofile.openapi</groupId>
+                <artifactId>microprofile-openapi-api</artifactId>
+                <version>${version.microprofile-openapi-api}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-client</artifactId>
+                <version>${version.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.resteasy</groupId>
+                <artifactId>resteasy-json-binding-provider</artifactId>
+                <version>${version.resteasy}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.slf4j-api}</version>
+            </dependency>
+
+            <!-- Additional Libraries -->
+
+            <!--        <dependency>-->
+            <!--            <groupId>com.mycompany.cucoda</groupId>-->
+            <!--            <artifactId>service-locator</artifactId>-->
+            <!--            <version>${version.service.locator}</version>-->
+            <!--        </dependency>-->
+            <!--        <dependency>-->
+            <!--            <groupId>com.mycompany.cucoda</groupId>-->
+            <!--            <artifactId>exception-mapping</artifactId>-->
+            <!--            <version>${version.exception-mapping}</version>-->
+            <!--        </dependency>-->
+
+            <!-- Services -->
+
+            <!-- Test Tools -->
+            <!--        <dependency>-->
+            <!--            <groupId>com.mycompany.cucoda</groupId>-->
+            <!--            <artifactId>sse-mock-backdoor-api</artifactId>-->
+            <!--            <version>${version.cucoda-mock-backdoor}</version>-->
+            <!--        </dependency>-->
+
+            <!-- Test Tools -->
+            <dependency>
+                <groupId>org.junit.jupiter</groupId>
+                <artifactId>junit-jupiter</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.assertj</groupId>
+                <artifactId>assertj-core</artifactId>
+                <version>${version.assertj-core}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.mockito</groupId>
+                <artifactId>mockito-junit-jupiter</artifactId>
+                <version>${version.mockito}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.jboss.weld</groupId>
+                <artifactId>weld-junit5</artifactId>
+                <version>${version.weld}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit-junit5-engine</artifactId>
+                <version>${version.archunit}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.tngtech.archunit</groupId>
+                <artifactId>archunit</artifactId>
+                <version>${version.archunit}</version>
+            </dependency>
+
+            <!-- Test-Time Libs -->
+            <dependency>
+                <groupId>ch.qos.logback</groupId>
+                <artifactId>logback-classic</artifactId>
+                <version>${version.logback}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.eclipse</groupId>
+                <artifactId>yasson</artifactId>
+                <version>${version.yasson}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.hibernate.validator</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${version.hibernate-validator}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.glassfish</groupId>
+                <artifactId>javax.el</artifactId>
+                <version>${version.javax-el}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version.lombok}</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 </project>
