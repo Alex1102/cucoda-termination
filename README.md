@@ -1,4 +1,24 @@
 
+## About The Project
+
+Create termination for contract and its articles
+
+### Built With
+* [Apache Maven](https://maven.apache.org/index.html)
+* [Jakarta EE](https://jakarta.ee)
+    * [Context Dependency Injection](https://jakarta.ee/specifications/cdi/2.0)
+    * RESTful Web Services ([Spec](https://jakarta.ee/specifications/restful-ws/) / [Impl](https://resteasy.github.io/))
+* Testing
+    * [AssertJ](https://joel-costigliola.github.io/assertj/)
+    * [Mockito](https://site.mockito.org/)
+    * [WeldUnit](https://weld.cdi-spec.org/news/2017/12/19/weld-meets-junit5/)
+    
+### Installation
+Clone and build [project]((https://bitbucket.1and1.org/projects/HOSTBSS-ORDER/repos/cisba-order/browse)):
+```sh
+mvn clean install
+```
+
 ## Technical Documentation
 
 ### Hot to create an Maven project
